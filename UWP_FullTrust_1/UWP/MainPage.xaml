@@ -8,6 +8,6 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button Content="Launch FullTrust Process" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
+        <Button Content="Run Desktop Extension Code" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
     </Grid>
 </Page>
