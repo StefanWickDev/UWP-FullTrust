@@ -19,29 +19,32 @@ namespace Launcher
             int index = result.LastIndexOf("\\");
             string rootPath = $"{result.Substring(0, index)}\\..\\";
 
+            // process object to keep track of your child process
+            Process newProcess = null;
+
             if (args.Length > 2)
             {
                 // launch process based on parameter
                 switch (args[2])
                 {
                     case "/background":
-                        Process.Start(rootPath + @"FullTrust_Background\FullTrust_Background.exe");
+                        newProcess = Process.Start(rootPath + @"FullTrust_Background\FullTrust_Background.exe");
                         break;
                     case "/wpf":
-                        Process.Start(rootPath + @"FullTrust_WPF\FullTrust_WPF.exe");
+                        newProcess = Process.Start(rootPath + @"FullTrust_WPF\FullTrust_WPF.exe");
                         break;
                     case "/winforms":
-                        Process.Start(rootPath + @"FullTrust_WindowsForms\FullTrust_WindowsForms.exe");
+                        newProcess = Process.Start(rootPath + @"FullTrust_WindowsForms\FullTrust_WindowsForms.exe");
                         break;
                     case "/win32":
-                        Process.Start(rootPath + @"FullTrust_Win32\FullTrust_Win32.exe");
+                        newProcess = Process.Start(rootPath + @"FullTrust_Win32\FullTrust_Win32.exe");
                         break;
                     case "/mstsc":
                         Process.Start(@"mstsc.exe");
                         break;
                     case "/parameters":
                         string parameters = ApplicationData.Current.LocalSettings.Values["parameters"] as string;
-                        Process.Start(rootPath + @"FullTrust_WPF\FullTrust_WPF.exe", parameters);
+                        newProcess = Process.Start(rootPath + @"FullTrust_WPF\FullTrust_WPF.exe", parameters);
                         break;
                 }
             }
