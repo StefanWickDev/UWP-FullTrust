@@ -1,4 +1,4 @@
-# UWP with Desktop Extension Tutorial - Part 1
+# UWP with Desktop Extension Tutorial - Part 2
 
 Sharing the code for the tutorial from my blog: https://stefanwick.com/2018/05/06/uwp-with-desktop-extension-part-2/
 
