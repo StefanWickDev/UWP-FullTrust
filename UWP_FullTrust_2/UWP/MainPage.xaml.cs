@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -31,36 +32,54 @@ namespace UWP
 
         private async void btnClick_WPF(object sender, RoutedEventArgs e)
         {
-            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("WPF");
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("WPF");
+            }
         }
 
         private async void btnClick_WinForms(object sender, RoutedEventArgs e)
         {
-            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("WinForms");
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("WinForms");
+            }
         }
 
         private async void btnClick_Win32(object sender, RoutedEventArgs e)
         {
-            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Win32");
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Win32");
+            }
         }
 
         private async void btnClick_Background(object sender, RoutedEventArgs e)
         {
-            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Background");
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Background");
+            }
         }
 
         private async void btnClick_System(object sender, RoutedEventArgs e)
         {
-            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("RemoteDesktop");
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("RemoteDesktop");
+            }
         }
 
         private async void btnClick_Parameters(object sender, RoutedEventArgs e)
         {
-            // store command line parameters in local settings
-            // so the Lancher can retrieve them and pass them on
-            ApplicationData.Current.LocalSettings.Values["parameters"] = tbParameters.Text;
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                // store command line parameters in local settings
+                // so the Lancher can retrieve them and pass them on
+                ApplicationData.Current.LocalSettings.Values["parameters"] = tbParameters.Text;
 
-            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Parameters");
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync("Parameters");
+            }
         }
     }
 }

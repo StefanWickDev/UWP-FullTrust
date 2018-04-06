@@ -8,6 +8,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -37,9 +38,12 @@ namespace UWP
         {
             base.OnNavigatedTo(e);
 
-            App.AppServiceConnected += MainPage_AppServiceConnected;
-            App.AppServiceDisconnected += MainPage_AppServiceDisconnected;
-            await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                App.AppServiceConnected += MainPage_AppServiceConnected;
+                App.AppServiceDisconnected += MainPage_AppServiceDisconnected;
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
         }
 
         /// <summary>
@@ -60,7 +64,7 @@ namespace UWP
         /// </summary>
         private async void MainPage_AppServiceDisconnected(object sender, EventArgs e)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async ()=>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, ()=>
             {
                 // disable UI to access the connection
                 btnRegKey.IsEnabled = false;
