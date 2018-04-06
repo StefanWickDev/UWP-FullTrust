@@ -10,6 +10,6 @@ You will need the following setup to run these projects:
 To Build/Deploy and Run the sample projects see the read.me for each individual project:
 
 - Part 1 - Hello World (MS Store: https://www.microsoft.com/store/apps/9ND9W9HWSWNS)
-- Part 2 - Launching multiple processes, passing in launch arguments (MS Store: tbd)
+- Part 2 - Launching multiple processes, passing in launch arguments (MS Store: https://www.microsoft.com/store/apps/9PLMLGKSCZQW)
 - Part 3 - Communication between UWP and Desktop code (MS Store: tbd)
 
