@@ -64,37 +64,58 @@ namespace FullTrust
         /// </summary>
         private async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args)
         {
+            // retrive the reg key name from the ValueSet in the request
             string key = args.Request.Message["KEY"] as string;
-            string hiveName = key.Substring(0, key.IndexOf('\\'));
-            string keyName = key.Substring(key.IndexOf('\\') + 1);
-            RegistryHive hive = RegistryHive.ClassesRoot;
-
-            switch (hiveName)
+            int index = key.IndexOf('\\');
+            if (index > 0)
             {
-                case "HKLM":
-                    hive = RegistryHive.LocalMachine;
-                    break;
-                case "HKCU":
-                    hive = RegistryHive.CurrentUser;
-                    break;
-                case "HKCR":
-                    hive = RegistryHive.ClassesRoot;
-                    break;
-                case "HKU":
-                    hive = RegistryHive.Users;
-                    break;
-                case "HKCC":
-                    hive = RegistryHive.CurrentConfig;
-                    break;
-            }
+                // read the key values from the respective hive in the registry
+                string hiveName = key.Substring(0, key.IndexOf('\\'));
+                string keyName = key.Substring(key.IndexOf('\\') + 1);
+                RegistryHive hive = RegistryHive.ClassesRoot;
 
-            using (RegistryKey regKey = RegistryKey.OpenRemoteBaseKey(hive, "").OpenSubKey(keyName))
+                switch (hiveName)
+                {
+                    case "HKLM":
+                        hive = RegistryHive.LocalMachine;
+                        break;
+                    case "HKCU":
+                        hive = RegistryHive.CurrentUser;
+                        break;
+                    case "HKCR":
+                        hive = RegistryHive.ClassesRoot;
+                        break;
+                    case "HKU":
+                        hive = RegistryHive.Users;
+                        break;
+                    case "HKCC":
+                        hive = RegistryHive.CurrentConfig;
+                        break;
+                }
+
+                using (RegistryKey regKey = RegistryKey.OpenRemoteBaseKey(hive, "").OpenSubKey(keyName))
+                {
+                    // compose the response as ValueSet
+                    ValueSet response = new ValueSet();
+                    if (regKey != null)
+                    {
+                        foreach (string valueName in regKey.GetValueNames())
+                        {
+                            response.Add(valueName, regKey.GetValue(valueName).ToString());
+                        }
+                    }
+                    else
+                    {
+                        response.Add("ERROR", "KEY NOT FOUND");
+                    }
+                    // send the response back to the UWP
+                    await args.Request.SendResponseAsync(response);
+                }
+            }
+            else
             {
                 ValueSet response = new ValueSet();
-                foreach (string valueName in regKey.GetValueNames())
-                {
-                    response.Add(valueName, regKey.GetValue(valueName).ToString());
-                }
+                response.Add("ERROR", "INVALID REQUEST");
                 await args.Request.SendResponseAsync(response);
             }
         }
@@ -104,6 +125,7 @@ namespace FullTrust
         /// </summary>
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            // ask the UWP to calculate d1 + d2
             ValueSet request = new ValueSet();
             request.Add("D1", d1);
             request.Add("D2", d2);

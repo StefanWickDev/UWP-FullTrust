@@ -54,15 +54,16 @@ namespace UWP
         protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
         {
             base.OnBackgroundActivated(args);
-            
-            if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails)
-            {
-                // connection established from the fulltrust process
-                AppServiceDeferral = args.TaskInstance.GetDeferral();
-                args.TaskInstance.Canceled += OnTaskCanceled;
 
-                if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details)
+            if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details)
+            {
+                // only accept connections from callers in the same package
+                if (details.CallerPackageFamilyName == Package.Current.Id.FamilyName)
                 {
+                    // connection established from the fulltrust process
+                    AppServiceDeferral = args.TaskInstance.GetDeferral();
+                    args.TaskInstance.Canceled += OnTaskCanceled;
+
                     Connection = details.AppServiceConnection;
                     AppServiceConnected?.Invoke(this, args.TaskInstance.TriggerDetails as AppServiceTriggerDetails);
                 }
