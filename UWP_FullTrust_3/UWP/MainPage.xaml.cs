@@ -105,6 +105,7 @@ namespace UWP
             response.Add("RESULT", result);
             await args.Request.SendResponseAsync(response);
 
+            // log the request in the UI for demo purposes
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 tbRequests.Text += string.Format("Request: {0} + {1} --> Response = {2}\r\n", d1, d2, result);
@@ -119,7 +120,10 @@ namespace UWP
             if (App.IsForeground)
             {
                 MessageDialog dlg = new MessageDialog("Connection to desktop process lost. Reconnect?");
-                UICommand yesCommand = new UICommand("Yes", async (r) => { await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync(); });
+                UICommand yesCommand = new UICommand("Yes", async (r) =>
+                {
+                    await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+                });
                 dlg.Commands.Add(yesCommand);
                 UICommand noCommand = new UICommand("No", (r) => { });
                 dlg.Commands.Add(noCommand);
